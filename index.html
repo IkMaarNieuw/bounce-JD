@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bounce Game</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #222;
+            font-family: Arial, sans-serif;
+            color: #eee;
+        }
+
+        #gameContainer {
+            width: 400px;
+            height: 300px;
+            border: 5px solid #00f;
+            background-color: #333;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #ball {
+            width: 50px; /* Groter gemaakt om het logo beter te laten zien */
+            height: 50px;
+            position: absolute;
+            background-size: cover;
+            background-position: center;
+        }
+
+        #controls {
+            margin-left: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        button {
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.2s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        button:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div id="gameContainer">
+        <div id="ball">
+            <img id="logo" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTONkpHKJexGstcL97yA_jajvAuNCQPxLNskg&s" alt="Ons Logo" style="width:100%; height:100%; display:block;">
+        </div>
+    </div>
+
+    <div id="controls">
+        <button id="startButton">Start Spel</button>
+        <button id="stopButton" disabled>Stop Spel</button>
+        <button id="resetButton">Reset Spel</button>
+    </div>
+
+    <script>
+        const gameContainer = document.getElementById('gameContainer');
+        const ball = document.getElementById('ball');
+        const startButton = document.getElementById('startButton');
+        const stopButton = document.getElementById('stopButton');
+        const resetButton = document.getElementById('resetButton');
+
+        let ballX = 0;
+        let ballY = 0;
+        let dx = 2;
+        let dy = 2;
+        let gameInterval;
+        let isRunning = false;
+
+        const containerWidth = gameContainer.offsetWidth;
+        const containerHeight = gameContainer.offsetHeight;
+        const ballSize = ball.offsetWidth;
+
+        function moveBall() {
+            ballX += dx;
+            ballY += dy;
+
+            if (ballX + ballSize > containerWidth || ballX < 0) {
+                dx *= -1;
+            }
+
+            if (ballY + ballSize > containerHeight || ballY < 0) {
+                dy *= -1;
+            }
+
+            ball.style.left = ballX + 'px';
+            ball.style.top = ballY + 'px';
+        }
+
+        function startGame() {
+            if (!isRunning) {
+                isRunning = true;
+                gameInterval = setInterval(moveBall, 10);
+                startButton.disabled = true;
+                stopButton.disabled = false;
+            }
+        }
+
+        function stopGame() {
+            if (isRunning) {
+                isRunning = false;
+                clearInterval(gameInterval);
+                startButton.disabled = false;
+                stopButton.disabled = true;
+            }
+        }
+
+        function resetGame() {
+            stopGame();
+            ballX = 0;
+            ballY = 0;
+            dx = 2;
+            dy = 2;
+            ball.style.left = ballX + 'px';
+            ball.style.top = ballY + 'px';
+            startButton.disabled = false;
+            stopButton.disabled = true;
+        }
+
+        startButton.addEventListener('click', startGame);
+        stopButton.addEventListener('click', stopGame);
+        resetButton.addEventListener('click', resetGame);
+
+        resetGame();
+    </script>
+</body>
+</html>
